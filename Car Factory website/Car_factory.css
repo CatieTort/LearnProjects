@@ -1,0 +1,58 @@
+body {
+  background-color: #CBF6FF;
+}
+
+h1, h5 {
+  font-family: 'Bungee', cursive;
+  font-size: 45px;
+}
+
+p {
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+}
+
+button, label {
+  font-family: 'Itim', cursive;
+  font-size: 20px;
+}
+
+
+.input {
+  margin: 5px;
+  padding: 5px;
+}
+
+.inputBtn{
+  margin: 5px;
+  padding: 15px;
+}
+
+.images {
+  position: relative;
+  display: inline;
+}
+
+.carImage {
+  position: absolute;
+  bottom: 25px;
+  right: 500px;
+
+/* Background image starts at 700px on the left, ends at around -100px.*/
+
+  animation: drive 4s steps(4, start) infinite;
+  animation-directon: normal;
+}
+
+
+@keyframes drive{
+ 0% {
+        right:700px;
+        -webkit-animation-timing-function: ease-in;
+   }
+
+  100% {
+      right: -100px;
+      animation-timing-function: ease-out;
+   }
+}
