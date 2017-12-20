@@ -1,0 +1,38 @@
+##Epic 2 Query the Database using JOINs on the Foreign Keys
+Produce a list of start times for bookings by members named 'David Farrell'?
+
+SELECT m.firstname, m.surname, b.start_time FROM members m JOIN bookings b ON b.member_id = m.id WHERE m.firstname = 'David' AND m.surname = 'Farrell';
+
+##Produce a list of the start times for bookings for tennis courts, for the date '2012-09-21'? Return a list of start time and facility name pairings, ordered by the time.
+
+WITH book_start AS (SELECT b.start_time, f.name FROM bookings b JOIN facilities f ON b.facility_id = f.id WHERE b.facility_id IN (0,1)) SELECT * FROM book_start bs WHERE start_time BETWEEN '2012-09-21 00:00:00'AND '2012-09-21 23:59:59' ORDER BY start_time;
+
+##Produce a list of all members who have used a tennis court? Include in your output the name of the court, and the name of the member formatted as first name, surname. Ensure no duplicate data, and order by the first name.
+
+SELECT DISTINCT m.firstname, m.surname, f.name FROM members m JOIN bookings b ON b.member_id = m.id JOIN facilities f ON f.id = b.facility_id WHERE f.id IN (0,1);
+
+##Produce a number of how many times Nancy Dare has used the pool table facility?
+
+WITH nancy_dare AS (SELECT  m.firstname, m.surname, f.id, f.name FROM members m JOIN bookings b ON b.member_id = m.id JOIN facilities f ON f.id = b.facility_id) SELECT firstname, surname, name, COUNT(id=8) AS visits FROM nancy_dare WHERE firstname = 'Nancy' AND surname = 'Dare' AND id = 8 GROUP BY firstname, surname, name;
+
+firstname | surname |    name     | visits
+-----------+---------+-------------+--------
+Nancy     | Dare    |  Pool Table |     19
+
+## Produce a list of how many times Nancy Dare has visited each country club facility.
+
+WITH nancy_dare AS (SELECT  m.firstname, m.surname, f.id, f.name FROM members m JOIN bookings b ON b.member_id = m.id JOIN facilities f ON f.id = b.facility_id) SELECT firstname, surname, name, COUNT(id) AS visits FROM nancy_dare WHERE firstname = 'Nancy' AND surname = 'Dare' GROUP BY firstname, surname, name ORDER BY visits DESC;
+ firstname | surname |       name       | visits
+-----------+---------+------------------+--------
+ Nancy     | Dare    |  Tennis Court 1  |     25
+ Nancy     | Dare    |  Snooker Table   |     23
+ Nancy     | Dare    |  Massage Room 1  |     19
+ Nancy     | Dare    |  Pool Table      |     19
+ Nancy     | Dare    |  Tennis Court 2  |     11
+ Nancy     | Dare    |  Badminton Court |     10
+ Nancy     | Dare    |  Table Tennis    |      5
+ Nancy     | Dare    |  Massage Room 2  |      5
+
+##Produce a list of all members who have recommended another member? Ensure that there are no duplicates in the list, and that results are ordered by (surname, firstname).
+
+WITH rec_table AS (SELECT m.firstname, m.surname, CONCAT(r.surname ,' ', r.firstname) AS "Recomended By" FROM members m JOIN members r ON m.id = r.recomended_by)SELECT * FROM rec_table;

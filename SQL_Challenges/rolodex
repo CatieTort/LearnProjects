@@ -1,0 +1,88 @@
+postgres=# \c rolodex
+You are now connected to database "rolodex" as user "learn".
+rolodex=# CREATE TABLE persons (id serial PRIMARY KEY, given_name varchar, family_name varchar, address varchar, dobtimestamp, email varchar);
+ERROR:  syntax error at or near ","
+LINE 1: ...family_name varchar, address varchar, dobtimestamp, email va...
+                                                             ^
+rolodex=# CREATE TABLE persons (id serial PRIMARY KEY, given_name varchar, family_name varchar, address varchar, dob timestamp, email varchar);
+CREATE TABLE
+rolodex=# SELECT * FROM persons
+rolodex-# \d persons
+                                      Table "public.persons"
+   Column    |            Type             |                      Modifiers
+-------------+-----------------------------+------------------------------------------------------
+ id          | integer                     | not null default nextval('persons_id_seq'::regclass)
+ given_name  | character varying           |
+ family_name | character varying           |
+ address     | character varying           |
+ dob         | timestamp without time zone |
+ email       | character varying           |
+Indexes:
+    "persons_pkey" PRIMARY KEY, btree (id)
+
+rolodex-# INSERT INTO persons (given_name, family_name,dob,email,address) VALUE ('Jeff','Clifford','1985-10-15', 'mynamejeff@google.com','1524 N Road');
+ERROR:  syntax error at or near "INTO"
+LINE 2: INSERT INTO persons (given_name, family_name,dob,email,addre...
+               ^
+rolodex=# INSERT INTO persons (given_name, family_name,dob,email,address) VALUE ('Jeff','Clifford','1985-10-15', 'mynamejeff@google.com','1524 N Road');
+ERROR:  syntax error at or near "VALUE"
+LINE 1: ...rsons (given_name, family_name,dob,email,address) VALUE ('Je...
+                                                             ^
+rolodex=# INSERT INTO persons (given_name, family_name,dob,email,address) VALUE ('Jeff','Clifford','1985-10-15', 'mynamejeff@google.com','1524 N Road');
+ERROR:  syntax error at or near "VALUE"
+LINE 1: ...rsons (given_name, family_name,dob,email,address) VALUE ('Je...
+                                                             ^
+rolodex=# INSERT INTO persons (given_name, family_name,dob,email,address) VALUES ('Jeff','Clifford','1985-10-15', 'mynamejeff@google.com','1524 N Road');
+INSERT 0 1
+rolodex=# INSERT INTO persons (given_name, family_name,dob,email,address) VALUES ('Kimmy','Schmidt','1842-3-21','itskimmy@yahoo.com','144 East Lane');
+INSERT 0 1
+rolodex=# INSERT INTO persons (given_name, family_name,dob,email,address) VALUES ('Jerry','Garcia','1945-2-21','cherry@garcia.com','200 Ashbury Road');
+INSERT 0 1
+rolodex=# INSERT INTO persons (given_name, family_name,dob,email,address) VALUES ('Julie','Clifford','1989-5-16','ponygirl12@hotmail.com','1524 N Road');
+INSERT 0 1
+rolodex=# INSERT INTO persons (given_name, family_name,dob,email,address) VALUES ('Justin','Pi','1996-10-15','realemail@internet.com','Home Street');
+INSERT 0 1
+rolodex=# SELECT * FROM persons;
+ id | given_name | family_name |     address      |         dob         |         email
+----+------------+-------------+------------------+---------------------+------------------------
+  1 | Jeff       | Clifford    | 1524 N Road      | 1985-10-15 00:00:00 | mynamejeff@google.com
+  2 | Kimmy      | Schmidt     | 144 East Lane    | 1842-03-21 00:00:00 | itskimmy@yahoo.com
+  3 | Jerry      | Garcia      | 200 Ashbury Road | 1945-02-21 00:00:00 | cherry@garcia.com
+  4 | Julie      | Clifford    | 1524 N Road      | 1989-05-16 00:00:00 | ponygirl12@hotmail.com
+  5 | Justin     | Pi          | Home Street      | 1996-10-15 00:00:00 | realemail@internet.com
+(5 rows)
+
+rolodex=# INSERT INTO persons (given_name, family_name,dob,email,address) VALUES ('Jason','Pi','1998-1-8','someoneelese@internet.com','Nowhere St.');
+INSERT 0 1
+rolodex=# SELECT * FROM persons;
+ id | given_name | family_name |     address      |         dob         |           email
+----+------------+-------------+------------------+---------------------+---------------------------
+  1 | Jeff       | Clifford    | 1524 N Road      | 1985-10-15 00:00:00 | mynamejeff@google.com
+  2 | Kimmy      | Schmidt     | 144 East Lane    | 1842-03-21 00:00:00 | itskimmy@yahoo.com
+  3 | Jerry      | Garcia      | 200 Ashbury Road | 1945-02-21 00:00:00 | cherry@garcia.com
+  4 | Julie      | Clifford    | 1524 N Road      | 1989-05-16 00:00:00 | ponygirl12@hotmail.com
+  5 | Justin     | Pi          | Home Street      | 1996-10-15 00:00:00 | realemail@internet.com
+  6 | Jason      | Pi          | Nowhere St.      | 1998-01-08 00:00:00 | someoneelese@internet.com
+(6 rows)
+
+rolodex=# UPDATE persons SET address = 'Home Street' WHERE family_name = 'Pi';
+UPDATE 2
+rolodex=# SELECT * FROM persons;
+ id | given_name | family_name |     address      |         dob         |           email
+----+------------+-------------+------------------+---------------------+---------------------------
+  1 | Jeff       | Clifford    | 1524 N Road      | 1985-10-15 00:00:00 | mynamejeff@google.com
+  2 | Kimmy      | Schmidt     | 144 East Lane    | 1842-03-21 00:00:00 | itskimmy@yahoo.com
+  3 | Jerry      | Garcia      | 200 Ashbury Road | 1945-02-21 00:00:00 | cherry@garcia.com
+  4 | Julie      | Clifford    | 1524 N Road      | 1989-05-16 00:00:00 | ponygirl12@hotmail.com
+  5 | Justin     | Pi          | Home Street      | 1996-10-15 00:00:00 | realemail@internet.com
+  6 | Jason      | Pi          | Home Street      | 1998-01-08 00:00:00 | someoneelese@internet.com
+(6 rows)
+
+rolodex=# DELETE FROM persons WHERE family_name != 'Pi';
+DELETE 4
+rolodex=# SELECT * FROM persons;
+ id | given_name | family_name |   address   |         dob         |           email
+----+------------+-------------+-------------+---------------------+---------------------------
+  5 | Justin     | Pi          | Home Street | 1996-10-15 00:00:00 | realemail@internet.com
+  6 | Jason      | Pi          | Home Street | 1998-01-08 00:00:00 | someoneelese@internet.com
+(2 rows)
