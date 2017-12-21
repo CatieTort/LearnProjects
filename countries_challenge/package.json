@@ -1,0 +1,11 @@
+{
+  "name": "countries_challenge",
+  "version": "1.0.0",
+  "description": "\"Sequelize challenges\"",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "pg": "6.1.5",
+    "sequelize": "3.30.4"
+  }
+}
