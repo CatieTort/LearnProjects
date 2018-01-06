@@ -1,0 +1,10 @@
+
+
+<ul>
+  <% for(index in bakingArray){ %>
+    <li>
+      <h1><%= bakingArray[index].get('name') %></h1>
+      <p><%= bakingArray[index].get('ingredients') %></p>
+    </li>
+  <% } %>
+</ul>

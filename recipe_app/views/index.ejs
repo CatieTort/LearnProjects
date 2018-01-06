@@ -1,0 +1,12 @@
+<h2> My Recipe Box </h2>
+
+<ul>
+  <% for(let index = 0; index < families.length; index++){ %>
+    <% let family = families[index] %>
+    <li>
+      <a href="/familyrecipes/<%= family.get('id') %>">
+        <%= family.get('name') %>
+      </a>
+    </li>
+  <% } %>
+</ul>
